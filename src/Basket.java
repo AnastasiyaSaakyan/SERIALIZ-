@@ -43,7 +43,7 @@ public class Basket {
         }
     }
 
-    public void saveTxt(File textFile) throws IOException {
+    public void saveBin(File textFile) throws IOException {
         try (PrintWriter out = new PrintWriter(textFile)) {
             for (int i = 0; i < getGoods().size(); i++) {
                 if (getAllGoods().get(i) != null) {
@@ -59,7 +59,7 @@ public class Basket {
     public Basket() {
     }
 
-    public static Basket loadFromTxtFile(File textFile) {
+    public static Basket loadFromBinFile(File textFile) {
         Basket cart = new Basket();
         File file = new File(textFile.toURI());
         try (FileReader fileReader = new FileReader(file);) {

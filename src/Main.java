@@ -30,7 +30,7 @@ public class Main {
                 break;
             }
             if ("load".equals(input)) {
-                cart.loadFromTxtFile(new File("basket.txt"));
+                cart.loadFromBinFile(new File("basket.bin"));
                 System.out.println("Информация загружена");
                 continue;
             }
@@ -42,7 +42,7 @@ public class Main {
                     int numProduct = Integer.parseInt(parse[0]) - 1;
                     int amount = Integer.parseInt(parse[1]);
                     cart.addToCart(numProduct, amount);
-                    cart.saveTxt(new File("basket.txt"));
+                    cart.saveBin(new File("basket.bin"));
                 } catch (NumberFormatException e) {
                     System.out.println("Введены некорректные данные: необходимо ввести числовые значения");
                 }
