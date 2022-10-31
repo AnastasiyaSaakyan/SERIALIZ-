@@ -5,7 +5,6 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 public class Basket {
     private List<String> goods;
@@ -29,6 +28,19 @@ public class Basket {
         return allGoods;
     }
 
+    public void setGoods(List<String> goods) {
+        this.goods = goods;
+    }
+
+    public void setPrice(List<Integer> price) {
+        this.price = price;
+    }
+
+    public void setAllGoods(Map<Integer, Integer> allGoods) {
+        this.allGoods = allGoods;
+    }
+
+
     public void addToCart(int numProduct, int amount) {
         if (allGoods.containsKey(numProduct)) {
             allGoods.put(numProduct, allGoods.get(numProduct) + amount);
@@ -49,7 +61,7 @@ public class Basket {
         }
     }
 
-    public void saveTxt(File textFile) throws IOException {
+    public void saveJSon(File textFile) {
         try (Writer writer = new FileWriter(textFile)) {
             Gson gson = new Gson();
             Basket temp = new Basket(goods, price);
@@ -61,20 +73,63 @@ public class Basket {
         }
     }
 
-    public static void loadFromTxtFile(File textFile) throws RuntimeException {
+    public void saveTxt(File textFile) throws IOException {
+        try (PrintWriter out = new PrintWriter(textFile);) {
+            for (int i = 0; i < getGoods().size(); i++) {
+                if (getAllGoods().get(i) != null) {
+                    String temp = getGoods().get(i) + " " + getAllGoods().get(i) +
+                            " " + getPrice().get(i);
+
+                    out.print(temp);
+                    out.print('\n');
+                } else {
+                    String temp = getGoods().get(i) + " " + 0 + " " + getPrice().get(i);
+                    out.print(temp);
+                    out.print('\n');
+
+                }
+            }
+        }
+        System.out.println("Данные сохранены");
+
+    }
+
+    public void loadFromJSonFile(File textFile) throws RuntimeException {
         try (Reader reader = new FileReader(textFile)) {
             GsonBuilder builder = new GsonBuilder();
             Gson gson = builder.create();
             Basket temp = gson.fromJson(reader, Basket.class);
+            this.allGoods = temp.allGoods;
             System.out.println(temp);
             System.out.println("Данные загружены");
         } catch (Exception e) {
+
             System.out.println("Файл не найден");
-            ;
         }
-        System.out.println("Информация успешно сохранена");
     }
 
+
+    public Basket loadFromTxtFile(File textFile) {
+
+        File file = new File(textFile.toURI());
+        try (FileReader fr = new FileReader(file);) {
+            BufferedReader reader = new BufferedReader(fr);
+            String line = reader.readLine();
+            int i = 0;
+            while (line != null) {
+                System.out.println(line);
+                String[] pars = line.split(" ");
+                this.allGoods.put(i, Integer.valueOf(pars[1]));
+                i++;
+                line = reader.readLine();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     @Override
     public String toString() {
